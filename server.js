@@ -30,9 +30,7 @@ l.on('connection',(socket)=> // connection is defined event, disconnect event.
     // })
 })
 
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname,"index.html"));
-})
+app.use(express.static(path.resolve("")));
 
 const start = async ()=>
 {
