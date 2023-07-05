@@ -10,13 +10,24 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server);
 
-io.on('connection',(socket)=>
+var l = io.of('/my');
+
+l.on('connection',(socket)=> // connection is defined event, disconnect event.
 {
     console.log("a user connected");
-    socket.on('disconnect',()=>
+    socket.emit("myevent",{"data":"hi huku hi huku hi hi"});
+    // io.sockets.emit('broadcast',{'message':+' users connected!'})
+    
+    l.on('disconnect',()=> // for acceting an event
     {
         console.log("a user disconnected");
     })
+
+    // socket.on("event1",(data)=>
+    // {
+    //     console.log("ok");
+    //     io.sockets.emit("broadcast","hello");
+    // })
 })
 
 app.get('/',(req,res)=>{
