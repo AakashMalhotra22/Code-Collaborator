@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Code-Collab</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/cae0832f66.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js"></script>
+    
+    
 </head>
 <body>
     <div class="lobby">
@@ -12,8 +16,30 @@
         <button id="submit">Press Me</button>
         <button id="newRoom">Get New Room</button>
     </div>
-    <script>
-        // var socket = io('/my');
+
+    <h1 id ="RoomTitle"></h1>
+    <button id="createFolder" onclick="createFolder()">Create Folder & Download Files</button>
+    <button id="saveRoom" onclick="saveRoom()">Save Room Online</button>
+    <div id="codeContainer" class="container">
+        <div class="left">
+            <label><i class="fa-brands fa-html5"></i> HTML</label>
+            <textarea id="html-code" onkeyup="run()"></textarea>
+            <label><i class="fa-brands fa-css3-alt"></i> CSS</label>
+            <textarea id="css-code" onkeyup="run()"></textarea>
+            <label><i class="fa-brands fa-square-js"></i> JavaScript</label>
+            <textarea id="js-code" onkeyup="run()"></textarea>
+        </div>
+        <div class="right"> 
+            <label><i class="fa-solid fa-play"></i> Output </label>
+            <iframe id="output"></iframe>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+// var socket = io('/my');
         // socket.on("myevent", (data)=>
         // {
         //     document.write(data.data);
@@ -28,7 +54,3 @@
         // socket.on("event2",(data)=>{
         //     document.write("data");
         // })
-
-    </script>
-</body>
-</html>
