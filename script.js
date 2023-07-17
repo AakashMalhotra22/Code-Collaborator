@@ -47,7 +47,8 @@ createRoomButton.addEventListener("click",async (event)=>
         {
             const roomDetails = await response.json();
             console.log(roomDetails.roomId);
-            alert(`New Room Created with Room Id ${roomDetails.roomId} `);
+            roomName.value = roomDetails.roomId;
+//            alert(`New Room Created with Room Id ${roomDetails.roomId} `);
         }
     }
     catch(err)
