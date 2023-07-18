@@ -33,9 +33,12 @@ io.on('connection',(socket)=>
 })
 
 app.use(express.static(path.resolve("")));
+
+// creating new room route
 app.post('/create-new-room', async (req, res) => {
-    try {
-        console.log("enter");
+    try 
+    {
+      console.log("enter");
       const newRoom = await Data.create({roomId:'',HtmlData:'',CssData:'',JavaScriptData:''});
       console.log(newRoom._id.toString());
       res.status(201).json({ roomId: newRoom._id.toString() });
@@ -44,6 +47,35 @@ app.post('/create-new-room', async (req, res) => {
       res.status(500).json({ error: 'Something went wrong.' });
     }
   });
+
+// checking if a room exist
+async function checkIfObjectExistsById(id) {
+    try {
+      const foundObject = await Data.exists({ _id: id });
+      return foundObject;
+    } 
+    catch (error) {
+      console.error('Error checking if the object exists:', error);
+      return false;
+    }
+  }
+  
+  app.get('/check-room-exists/:id', async (req, res) => {
+    try
+    {
+      const id = req.params.id;
+  
+      const objectExists = await checkIfObjectExistsById(id);
+  
+      res.json({ exists: objectExists });
+    } 
+    catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Something went wrong.' });
+    }
+  });
+  
+
 
 const start = async ()=>
 {

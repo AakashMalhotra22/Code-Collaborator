@@ -4,6 +4,7 @@ document.querySelector("#codeContainer").style.display = "none";
 document.querySelector("#createFolder").style.display = "none";
 document.querySelector("#saveRoom").style.display = "none";
 
+// join a room by enter
 let roomName = document.getElementById('RoomName');
 roomName.addEventListener('keypress', (event)=>
 {
@@ -14,6 +15,7 @@ roomName.addEventListener('keypress', (event)=>
     }
 });
 
+// join a room
 const joinButton = document.getElementById("join");
 joinButton.addEventListener("click",(event)=>
 {
@@ -46,9 +48,7 @@ createRoomButton.addEventListener("click",async (event)=>
         if(response.ok)
         {
             const roomDetails = await response.json();
-            console.log(roomDetails.roomId);
             roomName.value = roomDetails.roomId;
-//            alert(`New Room Created with Room Id ${roomDetails.roomId} `);
         }
     }
     catch(err)
@@ -57,24 +57,35 @@ createRoomButton.addEventListener("click",async (event)=>
     }
 });
 
-function SubmitRoomId()
+async function SubmitRoomId()
 {
-    if(roomName.value =="")
-    {
-        alert("Enter a valid Room Id");
-    }
-    else
-    {
-        document.querySelector("#codeContainer").style.display = "flex";
-        document.querySelector("#createFolder").style.display = "block";
-        document.querySelector("#saveRoom").style.display = "block";
-        document.querySelector(".lobby").style.display = "none";
-        document.querySelector("#RoomTitle").innerText = `room : ${roomName.value}`;
-        socket.emit("join-room",roomName.value);
+    const roomId = roomName.value;
+    //checking if room exist
+    try {
+        const response = await fetch(`http://localhost:4000/check-room-exists/${roomId}`);
+        const data = await response.json();
 
-        window.addEventListener('beforeunload', (e)=> {
-            e.preventDefault();
-            socket.emit("exit-room",roomName.value);
-        });
-    }
+        if (data.exists) 
+        {
+            document.querySelector("#codeContainer").style.display = "flex";
+            document.querySelector("#createFolder").style.display = "block";
+            document.querySelector("#saveRoom").style.display = "block";
+            document.querySelector(".lobby").style.display = "none";
+            document.querySelector("#RoomTitle").innerText = `room : ${roomId}`;
+            socket.emit("join-room",roomId);
+    
+            window.addEventListener('beforeunload', (e)=> {
+                e.preventDefault();
+                socket.emit("exit-room",roomId);
+            });
+        }
+        else
+        {
+          alert(`Room with ID ${roomId} does not exist.`);
+        }
+      } 
+      catch (error)
+       {
+        console.log('Error checking if room exists:');
+      }
 }
