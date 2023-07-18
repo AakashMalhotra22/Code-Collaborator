@@ -3,7 +3,8 @@ require('dotenv').config();
 const connectDB = require('./db/connect');
 const express = require('express');
 const path = require('path');
-const Data=require('./models/details');
+const Data=require('./models/roomDetails');
+const roomRoute = require('./routes/room');
 
 const app = express();
 const http = require('http');
@@ -26,57 +27,58 @@ io.on('connection',(socket)=>
 
     socket.on("createNewRoom", async()=>
     {
-        const newRoom = await Data.create({roomId:'',HtmlData:'',CssData:'',JavaScriptData:''});
+        const newRoom = await Data.create({HtmlData:'',CssData:'',JavaScriptData:''});
         console.log(newRoom._id);
     })
 
 })
 
 app.use(express.static(path.resolve("")));
+app.use('/api', roomRoute);
 
-// creating new room route
-app.post('/create-new-room', async (req, res) => {
-    try 
-    {
-      console.log("enter");
-      const newRoom = await Data.create({roomId:'',HtmlData:'',CssData:'',JavaScriptData:''});
-      console.log(newRoom._id.toString());
-      res.status(201).json({ roomId: newRoom._id.toString() });
-    } catch (error) {
-      console.error('Error creating a new room:', error);
-      res.status(500).json({ error: 'Something went wrong.' });
-    }
-  });
+// // creating new room route
+// app.post('/api/createNewRoom', async (req, res) => {
+//     try 
+//     {
+//       console.log("enter");
+//       const newRoom = await Data.create({HtmlData:'',CssData:'',JavaScriptData:''});
+//       console.log(newRoom._id.toString());
+//       res.status(201).json({ roomId: newRoom._id.toString() });
+//     } catch (error) {
+//       console.error('Error creating a new room:', error);
+//       res.status(500).json({ error: 'Something went wrong.' });
+//     }
+//   });
 
-// checking if a room exist
-async function checkIfObjectExistsById(id) {
-    try {
-      const foundObject = await Data.exists({ _id: id });
-      return foundObject;
-    } 
-    catch (error) {
-      console.error('Error checking if the object exists:', error);
-      return false;
-    }
-  }
+// // checking if a room exist
+// async function checkIfObjectExistsById(id) {
+//     try {
+//       const foundObject = await Data.exists({ _id: id });
+//       return foundObject;
+//     } 
+//     catch (error) {
+//       console.error('Error checking if the object exists:', error);
+//       return false;
+//     }
+//   }
   
-  app.get('/check-room-exists/:id', async (req, res) => {
-    try
-    {
-      const id = req.params.id;
+// app.get('/api/checkRoomExists/:id', async (req, res) => {
+//     try
+//     {
+//       const id = req.params.id;
   
-      const objectExists = await checkIfObjectExistsById(id);
+//       const objectExists = await checkIfObjectExistsById(id);
   
-      res.json({ exists: objectExists });
-    } 
-    catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Something went wrong.' });
-    }
-  });
+//       res.json({ exists: objectExists });
+//     } 
+//     catch (error) {
+//       console.error('Error:', error);
+//       res.status(500).json({ error: 'Something went wrong.' });
+//     }
+//   });
   
 
-
+// Connecting to Database
 const start = async ()=>
 {
     try

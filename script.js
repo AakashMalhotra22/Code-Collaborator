@@ -4,7 +4,7 @@ document.querySelector("#codeContainer").style.display = "none";
 document.querySelector("#createFolder").style.display = "none";
 document.querySelector("#saveRoom").style.display = "none";
 
-// join a room by enter
+// Join a room by enter Key
 let roomName = document.getElementById('RoomName');
 roomName.addEventListener('keypress', (event)=>
 {
@@ -15,7 +15,7 @@ roomName.addEventListener('keypress', (event)=>
     }
 });
 
-// join a room
+// join a room by button
 const joinButton = document.getElementById("join");
 joinButton.addEventListener("click",(event)=>
 {
@@ -33,12 +33,11 @@ createRoomButton.addEventListener("click",async (event)=>
     {
         const data = 
         {
-            roomId: '',
             HtmlData: '',
             CssData: '',
             JavaScriptData: ''
         };
-        const response = await fetch('http://localhost:4000/create-new-room', {
+        const response = await fetch('http://localhost:4000/api/createNewRoom', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,12 +56,13 @@ createRoomButton.addEventListener("click",async (event)=>
     }
 });
 
+// Enter a room
 async function SubmitRoomId()
 {
     const roomId = roomName.value;
     //checking if room exist
     try {
-        const response = await fetch(`http://localhost:4000/check-room-exists/${roomId}`);
+        const response = await fetch(`http://localhost:4000/api/checkRoomExists/${roomId}`);
         const data = await response.json();
 
         if (data.exists) 

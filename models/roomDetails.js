@@ -3,7 +3,6 @@ const{Schema,model} = mongoose;
 
 const DetailSchema =new Schema(
 {
-    roomId:String,
     HtmlData:String,
     CssData:String,
     JavaScriptData:String
