@@ -83,3 +83,27 @@ async function SubmitRoomId()
         console.log('Error checking if room exists:');
       }
 }
+
+// running the code, gets invoked on every change.
+function run() 
+{
+    HtmlData = document.getElementById("html-code").value;
+    CssData = document.getElementById("css-code").value;
+    JavaScriptData = document.getElementById("js-code").value;
+    
+    socket.emit("coding", { html: HtmlData, css: CssData, js: JavaScriptData});
+    output.contentDocument.body.innerHTML = HtmlData + "<style>" + CssData + "</style>";
+    output.contentWindow.eval(JavaScriptData);
+}
+// Receiving update signal from server
+socket.on("coding", (e) => {
+    console.log(e);
+    htmlCode = e.html;
+    cssCode = e.css;
+    jsCode = e.js;
+    document.getElementById("html-code").value = htmlCode;
+    document.getElementById("css-code").value = cssCode;
+    document.getElementById("js-code").value = jsCode;
+    output.contentDocument.body.innerHTML = htmlCode + "<style>" + cssCode + "</style>";
+    output.contentWindow.eval(jsCode);
+});
