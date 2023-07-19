@@ -62,13 +62,12 @@ async function SubmitRoomId()
             document.querySelector(".lobby").style.display = "none";
             document.querySelector("#RoomTitle").innerText = `room : ${roomId}`;
 
-            // restoring room prev state
+            // restoring room previous state
             document.getElementById("html-code").value = roomDetails.HtmlData;
             document.getElementById("css-code").value = roomDetails.CssData;
             document.getElementById("js-code").value = roomDetails.JavaScriptData;
 
             socket.emit("join-room",roomId);
-    
             window.addEventListener('beforeunload', (e)=> {
                 e.preventDefault();
                 socket.emit("exit-room",roomId);
