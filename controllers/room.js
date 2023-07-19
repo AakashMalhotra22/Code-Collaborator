@@ -32,10 +32,4 @@ const doCheckRoom = async(req,res)=>
       res.status(500).json({ error: 'Something went wrong.' });
     }
 }
-
-const doSaveRoom = async(req,res)=>
-{
-    return "hi";
-}
-
-module.exports = {doCreateRoom, doCheckRoom, doSaveRoom};
+module.exports = {doCreateRoom, doCheckRoom};

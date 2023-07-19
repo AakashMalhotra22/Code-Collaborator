@@ -4,5 +4,4 @@ const router = express.Router();
 
 router.route('/createNewRoom').get(doCreateRoom);
 router.route('/checkRoomExists/:id').get(doCheckRoom);
-router.route('/saveRoom').put(doSaveRoom);
 module.exports = router;

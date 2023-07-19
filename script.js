@@ -28,7 +28,6 @@ const createRoomButton = document.getElementById("newRoom")
 createRoomButton.addEventListener("click",async (event)=>
 {
     event.preventDefault();
-    console.log("hi");
     try
     {
         const response = await fetch('http://localhost:4000/api/createNewRoom');
@@ -91,19 +90,58 @@ function run()
     CssData = document.getElementById("css-code").value;
     JavaScriptData = document.getElementById("js-code").value;
     
-    socket.emit("coding", { html: HtmlData, css: CssData, js: JavaScriptData});
+    socket.emit("coding", {room: document.querySelector("#RoomName").value, html: HtmlData, css: CssData, js: JavaScriptData});
     output.contentDocument.body.innerHTML = HtmlData + "<style>" + CssData + "</style>";
     output.contentWindow.eval(JavaScriptData);
 }
 // Receiving update signal from server
 socket.on("coding", (e) => {
-    console.log(e);
-    htmlCode = e.html;
-    cssCode = e.css;
-    jsCode = e.js;
-    document.getElementById("html-code").value = htmlCode;
-    document.getElementById("css-code").value = cssCode;
-    document.getElementById("js-code").value = jsCode;
-    output.contentDocument.body.innerHTML = htmlCode + "<style>" + cssCode + "</style>";
-    output.contentWindow.eval(jsCode);
+    HtmlData = e.html;
+    CssData = e.css;
+    JavaScriptData = e.js;
+    document.getElementById("html-code").value = HtmlData;
+    document.getElementById("css-code").value = CssData;
+    document.getElementById("js-code").value = JavaScriptData;
+    output.contentDocument.body.innerHTML = HtmlData + "<style>" + CssData + "</style>";
+    output.contentWindow.eval(JavaScriptData);
 });
+
+function saveRoom()
+{
+    HtmlData = document.getElementById("html-code").value;
+    CssData = document.getElementById("css-code").value;
+    JavaScriptData = document.getElementById("js-code").value;
+    socket.emit("saveRoom",{
+        html:HtmlData,
+        css:CssData,
+        js:JavaScriptData,
+        room:document.querySelector("#RoomName").value
+    })
+}
+
+// Saving Code locally
+function createFolder() {
+    const folderName = document.querySelector("#RoomName").value;
+    const HtmlData = document.getElementById('html-code').value;
+    const CssData = document.getElementById('css-code').value;
+    const JavaScriptData = document.getElementById('js-code').value;
+
+    // Create a zip file to hold the folder and files
+    const zip = new JSZip();
+    const folder = zip.folder(folderName);
+
+    // Add the HTML, CSS, and JS files to the folder
+    folder.file('index.html', HtmlData);
+    folder.file('style.css', CssData);
+    folder.file('script.js', JavaScriptData);
+
+    // Generate the zip file
+    zip.generateAsync({ type: 'blob' })
+      .then(function (blob) {
+        // Create a download link for the zip file
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = folderName + '.zip';
+        link.click();
+      });
+  }
