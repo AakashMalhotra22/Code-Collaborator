@@ -2,7 +2,7 @@ const express = require('express');
 const { doCreateRoom, doCheckRoom, doSaveRoom } = require('../controllers/room');
 const router = express.Router();
 
-router.route('/createNewRoom').post(doCreateRoom);
+router.route('/createNewRoom').get(doCreateRoom);
 router.route('/checkRoomExists/:id').get(doCheckRoom);
-router.route('/saveRoom').post(doSaveRoom);
+router.route('/saveRoom').put(doSaveRoom);
 module.exports = router;

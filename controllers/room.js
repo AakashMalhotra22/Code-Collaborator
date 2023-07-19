@@ -1,4 +1,4 @@
-Data=require('../models/roomDetails');
+const Data = require('../models/roomDetails');
 
 const doCreateRoom = async(req,res)=>
 {
@@ -14,27 +14,18 @@ const doCreateRoom = async(req,res)=>
     }
 }
 
-async function checkIfObjectExistsById(id) 
-{
-    try 
-    {
-      const foundObject = await Data.exists({ _id: id });
-      return foundObject;
-    } 
-    catch (error) 
-    {
-      console.error('Error checking if the object exists:', error);
-      return false;
-    }
-}
-
 const doCheckRoom = async(req,res)=>
 {
     try
     {
       const id = req.params.id;
-      const objectExists = await checkIfObjectExistsById(id);
-      res.json({ exists: objectExists });
+      const object = await Data.findOne({ _id: id });
+      if(object === null)
+      {
+        return res.json({ exists: '0'});
+      }
+      // console.log(object);
+      return res.json({ exists:'1','data': object });
     } 
     catch (error) {
       console.error('Error:', error);

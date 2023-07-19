@@ -31,19 +31,7 @@ createRoomButton.addEventListener("click",async (event)=>
     console.log("hi");
     try
     {
-        const data = 
-        {
-            HtmlData: '',
-            CssData: '',
-            JavaScriptData: ''
-        };
-        const response = await fetch('http://localhost:4000/api/createNewRoom', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch('http://localhost:4000/api/createNewRoom');
         if(response.ok)
         {
             const roomDetails = await response.json();
@@ -65,13 +53,20 @@ async function SubmitRoomId()
         const response = await fetch(`http://localhost:4000/api/checkRoomExists/${roomId}`);
         const data = await response.json();
 
-        if (data.exists) 
+        if (data.exists =='1') 
         {
+            const roomDetails = data.data;
             document.querySelector("#codeContainer").style.display = "flex";
             document.querySelector("#createFolder").style.display = "block";
             document.querySelector("#saveRoom").style.display = "block";
             document.querySelector(".lobby").style.display = "none";
             document.querySelector("#RoomTitle").innerText = `room : ${roomId}`;
+
+            // restoring room prev state
+            document.getElementById("html-code").value = roomDetails.HtmlData;
+            document.getElementById("css-code").value = roomDetails.CssData;
+            document.getElementById("js-code").value = roomDetails.JavaScriptData;
+
             socket.emit("join-room",roomId);
     
             window.addEventListener('beforeunload', (e)=> {
